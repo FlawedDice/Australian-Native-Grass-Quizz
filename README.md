@@ -1,2 +1,2 @@
-# Australian-Native-Grass-Quizz
-A frontend for an Australian native grass quizz for my Design Capstone
+# Australian-Native-Grass-Quiz
+A frontend for an Australian native grass quiz for my Design Capstone
