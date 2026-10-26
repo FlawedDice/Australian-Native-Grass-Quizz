@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #17120f; }
+  * { box-sizing: border-box; }
+  a { color: #d99a4e; text-decoration: none; }
+  a:hover { color: #f3ece2; }
+  input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; }
+  input[type=range]::-webkit-slider-runnable-track { height: 2px; background: #4a3d33; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -12px; border-radius: 50%; background: #d99a4e; border: 3px solid #17120f; cursor: grab; }
+  input[type=range]::-moz-range-track { height: 2px; background: #4a3d33; }
+  input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #d99a4e; border: 3px solid #17120f; }
+  @keyframes gs-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes gs-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes gs-sway { 0%,100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+  @keyframes gs-halo { from { transform: scale(.6); opacity: 0; } 60% { opacity: .5; } to { transform: scale(1); opacity: .22; } }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: radial-gradient(120% 80% at 50% -10%, #2a201a 0%, #17120f 60%); color: #f3ece2; font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 300;">
+
+  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(16px, 4vw, 48px); border-bottom: 1px solid #2e2620; position: sticky; top: 0; background: rgba(23,18,15,.86); backdrop-filter: blur(10px); z-index: 20;">
+    <div onClick="{{ goHome }}" style="display: flex; align-items: baseline; gap: 10px; cursor: pointer;">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 17px; letter-spacing: -.02em;">Grass Signs</span>
+      <span style="font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: #8d7b6c;">Southern Sward Almanac</span>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div onClick="{{ goIndex }}" style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #c9b8a6; border: 1px solid #3a2f27; padding: 8px 14px; border-radius: 999px; cursor: pointer;" style-hover="border-color: #d99a4e; color: #f3ece2;">The Twelve</div>
+    </div>
+  </div>
+
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width: 1180px; margin: 0 auto; padding: clamp(40px, 8vh, 110px) clamp(16px, 4vw, 48px) 90px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(32px, 6vw, 72px); align-items: center;">
+        <div>
+          <div style="font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #c8613c; margin-bottom: 22px;">Twelve signs &middot; Twenty questions</div>
+          <h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300; font-size: clamp(44px, 7.6vw, 92px); line-height: .95; letter-spacing: -.035em; margin: 0 0 26px;">Every person is<br><span style="font-weight: 800; font-style: italic; color: #d99a4e;">a grass</span> waiting<br>to be named.</h1>
+          <p style="font-size: clamp(15px, 1.5vw, 18px); line-height: 1.65; color: #c9b8a6; max-width: 46ch; margin: 0 0 34px;">Twelve native grasses hold the continent between them. Answer twenty questions on water, tempo, company and fire, and the almanac will tell you which one you have been standing in all along, who grows well beside you, and who you should never share a paddock with.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+            <div onClick="{{ startQuiz }}" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 16px; background: #c8613c; color: #17120f; padding: 17px 34px; border-radius: 999px; cursor: pointer; letter-spacing: -.01em;" style-hover="background: #d99a4e;">Read my sign</div>
+            <div onClick="{{ goIndex }}" style="font-size: 13px; color: #c9b8a6; padding: 17px 20px; cursor: pointer; border-bottom: 1px solid #3a2f27;" style-hover="color: #f3ece2; border-color: #d99a4e;">Browse the twelve first</div>
+          </div>
+          <div style="display: flex; gap: 30px; margin-top: 52px; flex-wrap: wrap;">
+            <div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 600; color: #d99a4e;">20</div><div style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; margin-top: 4px;">Questions</div></div>
+            <div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 600; color: #d99a4e;">4</div><div style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; margin-top: 4px;">Trait axes</div></div>
+            <div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 600; color: #d99a4e;">~3</div><div style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; margin-top: 4px;">Minutes</div></div>
+          </div>
+        </div>
+        <div style="position: relative; min-height: 400px; display: flex; align-items: flex-end; justify-content: center;">
+          <div style="position: absolute; inset: 8% 12%; border-radius: 50%; background: radial-gradient(circle, rgba(200,97,60,.30), transparent 70%); animation: gs-halo 2.4s ease-out both;"></div>
+          <div style="position: relative; display: flex; align-items: flex-end; gap: 11px; height: 340px; animation: gs-sway 7s ease-in-out infinite; transform-origin: 50% 100%;">
+            <sc-for list="{{ landingBlades }}" as="b" hint-placeholder-count="14">
+              <div style="{{ b.style }}"></div>
+            </sc-for>
+          </div>
+          <div style="position: absolute; bottom: -6px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, #4a3d33, transparent);"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: clamp(60px, 10vh, 120px); border-top: 1px solid #2e2620; padding-top: 44px; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 28px;">
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 300; letter-spacing: -.02em; color: #f3ece2;">The four axes<br>the almanac reads</div>
+        <div><div style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #c8613c; margin-bottom: 8px;">Water</div><div style="font-size: 14px; line-height: 1.6; color: #a8998a;">Arid patience against riparian abundance. How much you need to be given before you grow.</div></div>
+        <div><div style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #c8613c; margin-bottom: 8px;">Tempo</div><div style="font-size: 14px; line-height: 1.6; color: #a8998a;">Perennial slowness against annual opportunism. Whether you wait for the season or make one.</div></div>
+        <div><div style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #c8613c; margin-bottom: 8px;">Company</div><div style="font-size: 14px; line-height: 1.6; color: #a8998a;">Solitary tussock against continuous sward. Whether you hold your own edges or dissolve into the crowd.</div></div>
+        <div><div style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #c8613c; margin-bottom: 8px;">Fire</div><div style="font-size: 14px; line-height: 1.6; color: #a8998a;">Fire-shy against fire-forged. What a bad year does to you, and what you do after it.</div></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isQuiz }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1080px; margin: 0 auto; padding: clamp(28px, 5vh, 60px) clamp(16px, 4vw, 48px) 90px; display: grid; grid-template-columns: 1fr; gap: 40px;">
+      <div style="display: grid; grid-template-columns: 74px 1fr; gap: clamp(18px, 4vw, 44px); align-items: start;">
+
+        <div style="position: sticky; top: 96px; height: 360px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
+          <div style="position: relative; width: 100%; height: 100%;">
+            <div style="position: absolute; left: 50%; bottom: 0; width: 2px; background: linear-gradient(180deg, #d99a4e, #4a3d33); transition: height .5s cubic-bezier(.2,.7,.2,1); height: {{ stemHeight }};"></div>
+            <sc-for list="{{ blades }}" as="b" hint-placeholder-count="0">
+              <div style="{{ b.style }}"></div>
+            </sc-for>
+          </div>
+          <div style="margin-top: 14px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; color: #8d7b6c; letter-spacing: .06em;">{{ qNumLabel }}</div>
+        </div>
+
+        <div style="min-height: 420px;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 26px;">
+            <div style="font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: #c8613c;">{{ qKicker }}</div>
+            <div style="flex: 1; height: 1px; background: #2e2620;"></div>
+            <div style="font-size: 11px; color: #8d7b6c; letter-spacing: .1em;">{{ progressLabel }}</div>
+          </div>
+
+          <div key="{{ qKey }}" style="animation: gs-rise .45s cubic-bezier(.2,.7,.2,1) both;">
+            <h2 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300; font-size: clamp(28px, 4.4vw, 50px); line-height: 1.06; letter-spacing: -.03em; margin: 0 0 12px; max-width: 24ch;">{{ qPrompt }}</h2>
+            <div style="font-size: 14px; color: #8d7b6c; margin-bottom: 34px; max-width: 52ch; line-height: 1.6;">{{ qSub }}</div>
+
+            <sc-if value="{{ isSliderQ }}" hint-placeholder-val="{{ false }}">
+              <div style="max-width: 620px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #a8998a; margin-bottom: 22px;">
+                  <span>{{ sliderLeft }}</span><span>{{ sliderRight }}</span>
+                </div>
+                <input type="range" min="0" max="100" step="1" value="{{ sliderVal }}" onChange="{{ onSlider }}" style="width: 100%; height: 26px;">
+                <div style="text-align: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px; color: #d99a4e; margin-top: 20px; min-height: 26px;">{{ sliderReadout }}</div>
+                <div onClick="{{ commitSlider }}" style="margin-top: 26px; display: inline-block; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 15px; background: #c8613c; color: #17120f; padding: 15px 32px; border-radius: 999px; cursor: pointer;" style-hover="background: #d99a4e;">Set it down</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ hasOptions }}" hint-placeholder-val="{{ false }}">
+              <div style="display: grid; grid-template-columns: {{ optionCols }}; gap: 12px; max-width: 760px;">
+                <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="2">
+                  <div onClick="{{ o.pick }}" style="border: 1px solid #3a2f27; border-radius: 16px; padding: 22px 22px 20px; cursor: pointer; background: #1d1713; transition: border-color .2s, background .2s, transform .2s;" style-hover="border-color: #d99a4e; background: #241c17; transform: translateY(-2px);">
+                    <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 19px; font-weight: 400; line-height: 1.25; letter-spacing: -.02em; color: #f3ece2;">{{ o.label }}</div>
+                    <div style="font-size: 12px; color: #8d7b6c; margin-top: 10px; letter-spacing: .04em;">{{ o.hint }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="margin-top: 38px; display: flex; gap: 18px; align-items: center;">
+              <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ goBack }}" style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #8d7b6c; cursor: pointer;" style-hover="color: #f3ece2;">&larr; Back</div>
+              </sc-if>
+              <div onClick="{{ goHome }}" style="font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #6b5b4e; cursor: pointer;" style-hover="color: #a8998a;">Start over</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1120px; margin: 0 auto; padding: clamp(32px, 6vh, 72px) clamp(16px, 4vw, 48px) 100px;">
+      <div style="text-align: center; animation: gs-fade .6s ease both;">
+        <div style="font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #c8613c;">The almanac finds you to be</div>
+        <h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(42px, 9vw, 108px); line-height: .92; letter-spacing: -.045em; margin: 18px 0 10px; animation: gs-rise .7s .15s cubic-bezier(.2,.7,.2,1) both;">{{ rName }}</h1>
+        <div style="font-family: 'Bricolage Grotesque', sans-serif; font-style: italic; font-weight: 300; font-size: clamp(16px, 2vw, 22px); color: #8d7b6c; animation: gs-rise .7s .3s cubic-bezier(.2,.7,.2,1) both;">{{ rBotanical }}</div>
+        <div style="max-width: 34ch; margin: 26px auto 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(19px, 2.4vw, 27px); font-weight: 300; line-height: 1.3; letter-spacing: -.02em; color: #d99a4e; animation: gs-rise .7s .45s cubic-bezier(.2,.7,.2,1) both;">{{ rEpithet }}</div>
+      </div>
+
+      <div style="margin-top: clamp(40px, 7vh, 76px); display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(24px, 4vw, 48px); animation: gs-rise .7s .6s cubic-bezier(.2,.7,.2,1) both;">
+        <div>
+          <p style="font-size: clamp(15px, 1.6vw, 18px); line-height: 1.7; color: #c9b8a6; margin: 0 0 22px;">{{ rBlurb }}</p>
+          <div style="border-top: 1px solid #2e2620; padding-top: 18px; display: grid; gap: 12px;">
+            <div style="display: flex; gap: 16px;"><span style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; min-width: 84px;">Country</span><span style="font-size: 14px; color: #f3ece2;">{{ rHabitat }}</span></div>
+            <div style="display: flex; gap: 16px;"><span style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; min-width: 84px;">Season</span><span style="font-size: 14px; color: #f3ece2;">{{ rSeason }}</span></div>
+            <div style="display: flex; gap: 16px;"><span style="font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #8d7b6c; min-width: 84px;">Shadow</span><span style="font-size: 14px; color: #f3ece2;">{{ rShadow }}</span></div>
+          </div>
+        </div>
+        <div style="display: grid; gap: 16px;">
+          <sc-for list="{{ rAxes }}" as="a" hint-placeholder-count="4">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #a8998a; margin-bottom: 8px;"><span>{{ a.left }}</span><span style="color: #8d7b6c;">{{ a.name }}</span><span>{{ a.right }}</span></div>
+              <div style="position: relative; height: 3px; background: #2e2620; border-radius: 2px;">
+                <div style="position: absolute; top: -5px; width: 13px; height: 13px; border-radius: 50%; background: #d99a4e; transition: left .8s cubic-bezier(.2,.7,.2,1); left: {{ a.pos }};"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: clamp(48px, 8vh, 90px); animation: gs-fade .8s .8s ease both;">
+        <div style="display: flex; align-items: baseline; gap: 14px; margin-bottom: 22px;">
+          <h3 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300; font-size: clamp(24px, 3.4vw, 38px); letter-spacing: -.03em; margin: 0;">Who grows well beside you</h3>
+          <div style="flex: 1; height: 1px; background: #2e2620;"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+          <sc-for list="{{ rMatches }}" as="m" hint-placeholder-count="3">
+            <div onClick="{{ m.open }}" style="border: 1px solid #3a2f27; border-radius: 16px; padding: 22px; background: #1d1713; cursor: pointer; transition: border-color .2s, transform .2s;" style-hover="border-color: #d99a4e; transform: translateY(-2px);">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 400; letter-spacing: -.02em;">{{ m.name }}</div>
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 600; color: #d99a4e;">{{ m.score }}</div>
+              </div>
+              <div style="font-size: 12px; color: #8d7b6c; margin-top: 10px; line-height: 1.55;">{{ m.why }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 20px; border: 1px dashed #4a3d33; border-radius: 16px; padding: 22px; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline;">
+          <span style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #c8613c;">Never share a paddock with</span>
+          <span onClick="{{ openOpposite }}" style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; cursor: pointer; border-bottom: 1px solid #4a3d33;" style-hover="color: #d99a4e;">{{ rOpposite }}</span>
+          <span style="font-size: 13px; color: #8d7b6c;">{{ rOppositeWhy }}</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 46px; display: flex; flex-wrap: wrap; gap: 12px;">
+        <div onClick="{{ goIndex }}" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 15px; background: #c8613c; color: #17120f; padding: 15px 30px; border-radius: 999px; cursor: pointer;" style-hover="background: #d99a4e;">Compare the twelve</div>
+        <div onClick="{{ startQuiz }}" style="font-size: 13px; color: #c9b8a6; padding: 15px 20px; cursor: pointer; border: 1px solid #3a2f27; border-radius: 999px;" style-hover="border-color: #d99a4e; color: #f3ece2;">Read it again</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width: 1180px; margin: 0 auto; padding: clamp(32px, 6vh, 66px) clamp(16px, 4vw, 48px) 100px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+        <h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 300; font-size: clamp(34px, 6vw, 66px); letter-spacing: -.035em; margin: 0;">The Twelve</h1>
+        <div style="font-size: 12px; color: #8d7b6c; letter-spacing: .06em;">Tap a card to turn it over.</div>
+      </div>
+      <p style="font-size: 15px; line-height: 1.7; color: #a8998a; max-width: 62ch; margin: 0 0 40px;">{{ indexIntro }}</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">
+        <sc-for list="{{ types }}" as="t" hint-placeholder-count="12">
+          <div onClick="{{ t.flip }}" style="perspective: 1200px; height: 260px; cursor: pointer;">
+            <div style="position: relative; width: 100%; height: 100%; transition: transform .65s cubic-bezier(.3,.7,.2,1); transform-style: preserve-3d; transform: {{ t.transform }};">
+              <div style="position: absolute; inset: 0; backface-visibility: hidden; border: 1px solid {{ t.border }}; border-radius: 18px; background: #1d1713; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;">
+                    <div style="font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: #c8613c;">{{ t.ordinal }}</div>
+                    <div style="font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: #6b5b4e;">{{ t.badge }}</div>
+                  </div>
+                  <div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 400; font-size: 25px; line-height: 1.1; letter-spacing: -.03em; margin-top: 16px;">{{ t.name }}</div>
+                  <div style="font-family: 'Bricolage Grotesque', sans-serif; font-style: italic; font-size: 13px; color: #8d7b6c; margin-top: 7px;">{{ t.botanical }}</div>
+                </div>
+                <div style="font-size: 13px; line-height: 1.5; color: #c9b8a6;">{{ t.epithet }}</div>
+              </div>
+              <div style="position: absolute; inset: 0; backface-visibility: hidden; transform: rotateY(180deg); border: 1px solid #d99a4e; border-radius: 18px; background: #241c17; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 17px; letter-spacing: -.02em; color: #d99a4e;">{{ t.name }}</div>
+                <div style="display: grid; gap: 9px;">
+                  <sc-for list="{{ t.traits }}" as="tr" hint-placeholder-count="3">
+                    <div style="display: flex; gap: 10px; font-size: 12.5px; line-height: 1.45; color: #c9b8a6;"><span style="color: #c8613c;">&mdash;</span><span>{{ tr }}</span></div>
+                  </sc-for>
+                </div>
+                <div style="margin-top: auto; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #8d7b6c;">Pairs with {{ t.pair }}</div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: 50px; display: flex; flex-wrap: wrap; gap: 12px;">
+        <div onClick="{{ startQuiz }}" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 15px; background: #c8613c; color: #17120f; padding: 15px 30px; border-radius: 999px; cursor: pointer;" style-hover="background: #d99a4e;">Find my sign</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="border-top: 1px solid #2e2620; padding: 26px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; gap: 10px 26px; justify-content: space-between; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #6b5b4e;">
+    <span>Grass Signs &middot; Southern Sward Almanac</span>
+    <span>Twelve native grasses, no horoscope licence required</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;matchCount&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3,&quot;min&quot;:2,&quot;max&quot;:5,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Result&quot;},&quot;showBotanical&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Result&quot;}}">
+const AX = ['water', 'tempo', 'company', 'fire'];
+
+const TYPES = [
+  { id: 'kangaroo', name: 'Kangaroo Grass', botanical: 'Themeda triandra', badge: 'Fire-forged', epithet: 'You were made better by the worst year of your life.', v: [.5, .45, .6, .95],
+    blurb: 'Kangaroo Grass is the sign of the returning. It carries the continent on its back and asks for nothing but the occasional burning. You are the person who comes back russet and taller after the season that flattened everyone else, and you are quietly suspicious of anyone who has never been tested.',
+    habitat: 'Grassy plains and woodland edges, coast to inland', season: 'Late summer, seed heads gone bronze', shadow: 'Mistaking hardship for virtue',
+    traits: ['Regenerates instead of complaining', 'Best in company, never dependent on it', 'Runs hot; needs the burn to clear the old growth'], pair: 'Wallaby Grass' },
+  { id: 'weeping', name: 'Weeping Grass', botanical: 'Microlaena stipoides', badge: 'Shade-dweller', epithet: 'You do your best work where nobody thought to look.', v: [.7, .5, .8, .2],
+    blurb: 'Weeping Grass grows in the half-light under other people\u2019s canopies and does not resent it. Soft to the hand, impossible to remove. You are the sign of the quiet indispensable: the one who holds the slope together while the showier species take the sun.',
+    habitat: 'Moist forest floors and shaded gullies', season: 'All year, softly', shadow: 'Being taken for granted and letting it happen',
+    traits: ['Thrives in shade others find unbearable', 'Binds a group together without leading it', 'Slow to say no, quick to forgive'], pair: 'Salt Couch' },
+  { id: 'spinifex', name: 'Spinifex', botanical: 'Triodia basedowii', badge: 'Arid ascetic', epithet: 'You need almost nothing, and you will not be moved.', v: [.05, .15, .3, .8],
+    blurb: 'Spinifex holds the red centre in rings that widen for a century. You are the sign of the long refusal: spiny at the edges, resinous within, entirely unbothered by drought or opinion. People take a while to get close, and the ones who manage it stay for decades.',
+    habitat: 'Sandplains and stony deserts of the interior', season: 'Whenever rain finally arrives', shadow: 'Confusing self-sufficiency with intimacy',
+    traits: ['Survives on a rumour of water', 'Prickly on approach, resinous and warm inside', 'Thinks in centuries, not seasons'], pair: 'Mitchell Grass' },
+  { id: 'wallaby', name: 'Wallaby Grass', botanical: 'Rytidosperma caespitosum', badge: 'Early riser', epithet: 'You are already up, already useful, already halfway there.', v: [.35, .6, .55, .4],
+    blurb: 'Wallaby Grass greens before anything else has decided the season has started. You are the sign of cheerful earliness: fine-leaved, fluffy-seeded, first to volunteer. The almanac warns you that not every gap needs filling by you personally.',
+    habitat: 'Temperate grasslands and roadsides, widespread', season: 'Spring, seed like small clouds', shadow: 'Filling every silence',
+    traits: ['First green after the cold', 'Adapts to poor ground without sulking', 'Generous with seed, careless with rest'], pair: 'Kangaroo Grass' },
+  { id: 'mitchell', name: 'Mitchell Grass', botanical: 'Astrebla lappacea', badge: 'Long-hauler', epithet: 'You keep the promise you made in a better year.', v: [.15, .3, .7, .5],
+    blurb: 'Mitchell Grass holds the black-soil downs through droughts that end other species. You are the sign of the steady debt honoured: deep-rooted, slow, endlessly reliable, and inclined to think that endurance is the only real talent.',
+    habitat: 'Cracking clay downs of the semi-arid inland', season: 'After the wet, in tufts to the horizon', shadow: 'Enduring things that should be left',
+    traits: ['Roots deeper than the drought is long', 'Holds a whole landscape in place', 'Slow to change; changes for good'], pair: 'Spinifex' },
+  { id: 'poa', name: 'Common Tussock', botanical: 'Poa labillardierei', badge: 'Solitary', epithet: 'You keep your own edges, and you keep them well.', v: [.65, .25, .2, .35],
+    blurb: 'A tussock is a private argument with the wind, settled in favour of the tussock. You grow in one dense place near water and let the rest of the paddock organise itself. The almanac finds you formidable, self-contained and a little hard to visit.',
+    habitat: 'Damp flats, creek margins, cold country', season: 'Silver-blue through winter', shadow: 'A boundary that becomes a wall',
+    traits: ['Dense at the centre, unbothered at the edge', 'Shelters small things without announcing it', 'Prefers depth of place to breadth of range'], pair: 'Plume Grass' },
+  { id: 'bluegrass', name: 'Queensland Blue', botanical: 'Dichanthium sericeum', badge: 'Charmer', epithet: 'You make the whole paddock look like it planned itself.', v: [.4, .7, .65, .6],
+    blurb: 'Queensland Blue turns silky and blue-tinged in the heat and everyone remarks on it. You are the sign of the effortless impression: fast to establish, sweet to the stock, quick to fill a room. The almanac suggests you check whether you are growing or merely spreading.',
+    habitat: 'Northern and inland grasslands on heavier soils', season: 'Summer, silvered awns catching the light', shadow: 'Charm outrunning root depth',
+    traits: ['Establishes fast and looks good doing it', 'Palatable to almost everyone', 'Needs to be told the truth occasionally'], pair: 'Windmill Grass' },
+  { id: 'barbedwire', name: 'Barbed Wire Grass', botanical: 'Cymbopogon refractus', badge: 'Contrarian', epithet: 'You point in a direction nobody else agreed on.', v: [.35, .5, .15, .7],
+    blurb: 'Barbed Wire Grass holds its seed heads out at hard angles like a fence nobody asked for, and smells of lemon when you crush it. You are the sign of the principled awkward: aromatic, unpalatable, entirely legible once someone bothers to look closely.',
+    habitat: 'Dry hillsides and disturbed open forest', season: 'Summer, angular and unmistakable', shadow: 'Disagreeing on reflex',
+    traits: ['Unmistakable silhouette at fifty paces', 'Aromatic under pressure', 'Grazed last, standing longest'], pair: 'Common Tussock' },
+  { id: 'saltcouch', name: 'Salt Couch', botanical: 'Sporobolus virginicus', badge: 'Connector', epithet: 'You are everywhere at once and nowhere in particular.', v: [.8, .55, .95, .25],
+    blurb: 'Salt Couch runs its runners across saltmarsh and dune and stitches the coast together. You are the sign of the network: tolerant of conditions that would kill a purist, always three degrees from everyone, hard to find the centre of.',
+    habitat: 'Saltmarsh, estuary flats and coastal dunes', season: 'Green through the salt spray, most of the year', shadow: 'Spreading so wide there is no middle',
+    traits: ['Tolerates salt, tide and bad company', 'Connects ground nothing else will hold', 'Hard to pin down to one place'], pair: 'Weeping Grass' },
+  { id: 'windmill', name: 'Windmill Grass', botanical: 'Chloris truncata', badge: 'Opportunist', epithet: 'You arrive the moment the ground opens up.', v: [.25, .95, .45, .45],
+    blurb: 'Windmill Grass appears in the bare patch within a fortnight, sets seed, and lets the wind roll its spokes away. You are the sign of the fast start: brilliant in a gap, bored by a finished landscape. The almanac would like to know what you are doing next winter.',
+    habitat: 'Bare and disturbed ground, almost anywhere', season: 'Any warm week that follows rain', shadow: 'Leaving before the slow part',
+    traits: ['Colonises a gap before anyone notices it', 'Sets seed fast and travels on the wind', 'Rarely present for the long middle'], pair: 'Queensland Blue' },
+  { id: 'plume', name: 'Plume Grass', botanical: 'Dichelachne crinita', badge: 'Romantic', epithet: 'You have never once entered a room plainly.', v: [.55, .7, .35, .3],
+    blurb: 'Long-hair Plume Grass carries a soft feathered head far above its leaves for no practical reason at all. You are the sign of ornament as sincerity: expressive, a little theatrical, entirely genuine about it. The almanac approves and advises a windbreak.',
+    habitat: 'Open forest, gully edges and stream banks', season: 'Late spring, plumes backlit', shadow: 'Weather-sensitive; bends in a hard wind',
+    traits: ['Expressive well beyond requirement', 'Beautiful at the exact wrong moments', 'Needs shelter it will never ask for'], pair: 'Common Tussock' },
+  { id: 'reed', name: 'Common Reed', botanical: 'Phragmites australis', badge: 'Abundant', epithet: 'Give you enough water and you will take the whole wetland.', v: [1, .8, .9, .15],
+    blurb: 'Common Reed stands three metres in still water and keeps going. You are the sign of appetite: fast, tall, collective, capable of cleaning a polluted swamp or swallowing it entirely. The almanac admires the scale and mentions restraint twice.',
+    habitat: 'Freshwater swamps, drains and river edges', season: 'Autumn, purple plumes over the water', shadow: 'Growth without a boundary',
+    traits: ['Filters what others could not survive', 'Never grows alone, ever', 'Boundaries are a learned skill, not a native one'], pair: 'Salt Couch' }
+];
+
+// [prompt, sub, kicker, type, ...]
+const QUESTIONS = [
+  { p: 'Dawn arrives without asking.', s: 'The light is grey and the day has not decided anything yet.', k: 'First light', o: [
+    ['You are already standing, dew on every blade', 'up before the sun made it official', { tempo: .85, company: .5 }],
+    ['You wait for the sun to insist', 'nothing good was ever rushed', { tempo: .15, company: .4 }]] },
+  { p: 'Rain has not come for nine weeks.', s: 'The forecast is a rumour and the tank is low.', k: 'Drought', o: [
+    ['Send roots down and stop growing up', 'patience is a strategy', { water: .15, tempo: .2 }],
+    ['Hold everything you have and wait it out', 'no new leaves until further notice', { water: .3, tempo: .35 }],
+    ['Set seed now, before it gets worse', 'insurance against the season', { water: .35, tempo: .9 }],
+    ['Move to wherever the water still is', 'thirst is not a personality', { water: .85, tempo: .6 }]] },
+  { p: 'How much room do you need between yourself and the next person?', s: 'Answer with your body, not your manners.', k: 'Company', t: 's', axis: 'company', left: 'One dense tussock', right: 'Continuous sward', readouts: ['A clear metre of bare ground, thank you', 'Close enough to hear, far enough to think', 'Shoulder to shoulder, roots tangled', 'One organism, technically speaking'] },
+  { p: 'Fire moves through the paddock.', s: 'It is over in four minutes. The smoke takes an hour to clear.', k: 'Fire', o: [
+    ['You resprout greener within the fortnight', 'this is what you were built for', { fire: .95, tempo: .6 }],
+    ['You lose the year but keep the crown', 'diminished, not ended', { fire: .55, tempo: .3 }],
+    ['You survive because the fire could not reach you', 'wet feet, lucky address', { fire: .1, water: .8 }],
+    ['You burn hot and take the shrubs with you', 'if it is happening, it is happening properly', { fire: .85, company: .55 }]] },
+  { p: 'A gap opens in a landscape you did not plan.', s: 'Bare soil. Nobody has claimed it.', k: 'Opportunity', o: [
+    ['In it by Friday', 'the gap was addressed to you', { tempo: .95, company: .45 }],
+    ['Watch a season, then decide', 'gaps close for reasons', { tempo: .2, company: .4 }]] },
+  { p: 'Someone leans on you hard.', s: 'Grazed, trodden, asked for too much.', k: 'Pressure', o: [
+    ['Bend flat and stand up after', 'flexible, not compliant', { fire: .5, tempo: .55 }],
+    ['Become unpalatable', 'a boundary with a smell to it', { fire: .7, company: .2 }],
+    ['Spread sideways where the pressure is not', 'lateral thinking, literally', { company: .9, tempo: .7 }],
+    ['Hold your ground and let them tire', 'you were here first', { company: .3, tempo: .25 }]] },
+  { p: 'The wet season is generous.', s: 'More water than anybody knows what to do with.', k: 'Abundance', o: [
+    ['Take all of it and grow three metres', 'appetite is not a flaw', { water: 1, tempo: .85, company: .85 }],
+    ['Take what you need and bank the rest', 'the dry always comes back', { water: .35, tempo: .35 }]] },
+  { p: 'How quickly do you commit?', s: 'From first interest to roots in the ground.', k: 'Tempo', t: 's', axis: 'tempo', left: 'A decade of thought', right: 'By the weekend', readouts: ['You are still considering a decision from 2019', 'Slow, deliberate, hard to reverse', 'Warm to it fast, then check yourself', 'Committed before the sentence finished'] },
+  { p: 'Your ideal ground.', s: 'Not the postcard. The soil.', k: 'Country', o: [
+    ['Red sand that has not seen rain this year', 'space, silence, heat', { water: .05, company: .3 }],
+    ['Cracking black clay under big sky', 'seasonal, honest, hard-working', { water: .2, company: .7 }],
+    ['A shaded gully with a creek in it', 'green all year, nobody visiting', { water: .75, company: .55 }],
+    ['Salt flats where the tide comes in', 'edges, movement, tolerance', { water: .85, company: .9 }]] },
+  { p: 'A stranger approaches your patch.', s: 'They seem well-intentioned. They are quite close now.', k: 'Approach', o: [
+    ['Spiny first, warm eventually', 'earn it', { company: .25, fire: .7 }],
+    ['Soft immediately, honest later', 'come in, mind the slope', { company: .8, water: .6 }]] },
+  { p: 'How much shade can you tolerate?', s: 'Someone else is taking the light. Indefinitely.', k: 'Shade', t: 's', axis: 'water', left: 'Full open sun only', right: 'Deep forest floor', readouts: ['You need the whole sky and you will say so', 'Sun most of the day, and you notice when it goes', 'Half-light suits you better than you admit', 'You have never once needed the spotlight'] },
+  { p: 'Your seed head, honestly.', s: 'The part of you people describe when you are not there.', k: 'Form', o: [
+    ['A dark bronze fan, unmistakable', 'structural, warm, a little formal', { fire: .9, company: .6 }],
+    ['A soft feathered plume, far too long', 'expressive past the point of function', { tempo: .7, company: .35 }],
+    ['Spokes on a wheel, ready to travel', 'built for the next place', { tempo: .95, company: .45 }],
+    ['A dense tuft close to the leaves', 'no announcement required', { tempo: .25, company: .25 }]] },
+  { p: 'A bad year ends.', s: 'The ground is bare and it is finally raining.', k: 'Recovery', o: [
+    ['You were the first thing green', 'recovery as reflex', { tempo: .9, fire: .6 }],
+    ['You came back from the base, slowly', 'the crown held', { tempo: .3, fire: .55 }]] },
+  { p: 'What holds a group together?', s: 'Choose the mechanism you actually trust.', k: 'Bonds', o: [
+    ['Runners underground nobody can see', 'infrastructure, not sentiment', { company: .95, water: .7 }],
+    ['Everyone rooted in the same soil', 'shared ground, separate stems', { company: .6, water: .4 }],
+    ['A few strong individuals holding the corners', 'load-bearing friendships', { company: .25, tempo: .35 }],
+    ['Fire, honestly. Shared catastrophe.', 'nothing bonds like a bad summer', { fire: .95, company: .55 }]] },
+  { p: 'You are asked to grow somewhere unsuitable.', s: 'Salt, or clay, or the wrong side of a hill.', k: 'Adaptation', o: [
+    ['Fine. Adjust and get on with it', 'tolerance as a skill', { water: .7, company: .85 }],
+    ['No. Wait for ground that suits you', 'right place or no place', { water: .3, company: .3 }]] },
+  { p: 'How much do you need to be given before you grow?', s: 'Water, attention, resources. Same question.', k: 'Water', t: 's', axis: 'water', left: 'Almost nothing', right: 'Constant supply', readouts: ['A rumour of rain and you are away', 'Lean seasons are survivable and familiar', 'You do better when it keeps coming', 'Standing water, permanently, please'] },
+  { p: 'The season turns cold and long.', s: 'Months of it.', k: 'Winter', o: [
+    ['Silver-blue and standing, all the way through', 'presence, not performance', { tempo: .25, water: .6 }],
+    ['Gone above ground, alive below', 'strategic disappearance', { tempo: .5, fire: .5 }],
+    ['Still green, still going, quietly', 'nothing dramatic to report', { water: .7, company: .8 }],
+    ['Waiting for one warm week to explode', 'coiled', { tempo: .95, water: .25 }]] },
+  { p: 'What is your worst habit?', s: 'The almanac already knows. It is being polite.', k: 'Shadow', o: [
+    ['Taking more room than agreed', 'growth without a fence', { company: .9, water: .9 }],
+    ['Refusing help you clearly need', 'self-sufficiency as a wall', { company: .2, water: .15 }],
+    ['Leaving before the slow part', 'brilliant openings, absent middles', { tempo: .95, company: .45 }],
+    ['Enduring what should be abandoned', 'roots in the wrong decade', { tempo: .2, company: .6 }]] },
+  { p: 'Someone burns the paddock deliberately.', s: 'For good reasons. They did not ask you.', k: 'Renewal', o: [
+    ['Overdue. The old growth was smothering me', 'clear it', { fire: .95, tempo: .6 }],
+    ['Unnecessary. I was managing', 'leave the thatch alone', { fire: .15, tempo: .3 }]] },
+  { p: 'A hundred years from now, your patch.', s: 'Last question. Be honest about the scale.', k: 'Legacy', o: [
+    ['A ring two hundred metres wide, still widening', 'geological patience', { tempo: .1, water: .05, company: .3 }],
+    ['A slope that never eroded because you were on it', 'invisible, structural, essential', { company: .8, water: .7 }],
+    ['A hundred different paddocks, each briefly', 'seed on the wind', { tempo: .95, company: .45 }],
+    ['The same tussock, larger, unmoved', 'one place, done properly', { tempo: .2, company: .2 }]] }
+];
+
+const AXMETA = {
+  water: { name: 'Water', left: 'Arid', right: 'Riparian' },
+  tempo: { name: 'Tempo', left: 'Slow', right: 'Fast' },
+  company: { name: 'Company', left: 'Solitary', right: 'Sward' },
+  fire: { name: 'Fire', left: 'Fire-shy', right: 'Fire-forged' }
+};
+
+function bladeStyle(i, n, h, side) {
+  const w = 2;
+  return `position:absolute; left:50%; bottom:${(i / n) * 78 + 6}%; width:${h}px; height:${w}px; transform-origin:${side < 0 ? 'right' : 'left'} center; transform:translateX(${side < 0 ? '-100%' : '0'}) rotate(${side < 0 ? 28 : -28}deg); background:linear-gradient(${side < 0 ? '270deg' : '90deg'}, #d99a4e, rgba(217,154,78,.25)); border-radius:2px; animation:gs-fade .5s ease both;`;
+}
+
+class Component extends DCLogic {
+  state = { screen: 'landing', qi: 0, answers: {}, slider: 50, flipped: {}, resultId: null };
+
+  scores() {
+    const acc = {}, wt = {};
+    AX.forEach(a => { acc[a] = 0; wt[a] = 0; });
+    Object.keys(this.state.answers).forEach(k => {
+      const eff = this.state.answers[k].eff || {};
+      Object.keys(eff).forEach(a => { acc[a] += eff[a]; wt[a] += 1; });
+    });
+    const out = {};
+    AX.forEach(a => { out[a] = wt[a] ? acc[a] / wt[a] : .5; });
+    return out;
+  }
+
+  ranked() {
+    const s = this.scores();
+    return TYPES.map(t => {
+      let d = 0;
+      AX.forEach((a, i) => { d += Math.pow(s[a] - t.v[i], 2); });
+      return { t, d: Math.sqrt(d) };
+    }).sort((a, b) => a.d - b.d);
+  }
+
+  affinity(a, b) {
+    let d = 0;
+    for (let i = 0; i < 4; i++) d += Math.pow(a.v[i] - b.v[i], 2);
+    return Math.max(38, Math.round(100 - Math.sqrt(d) * 58));
+  }
+
+  why(a, b) {
+    const labels = [];
+    for (let i = 0; i < 4; i++) {
+      const diff = Math.abs(a.v[i] - b.v[i]);
+      labels.push({ ax: AX[i], diff, mid: (a.v[i] + b.v[i]) / 2 });
+    }
+    labels.sort((x, y) => x.diff - y.diff);
+    const near = labels[0], far = labels[3];
+    const m = AXMETA[near.ax], f = AXMETA[far.ax];
+    return `Agreed on ${m.name.toLowerCase()} \u2014 both ${near.mid > .55 ? m.right.toLowerCase() : m.left.toLowerCase()}. You will argue about ${f.name.toLowerCase()}, productively.`;
+  }
+
+  pick(eff) {
+    const qi = this.state.qi;
+    const answers = Object.assign({}, this.state.answers, { [qi]: { eff } });
+    if (qi + 1 >= QUESTIONS.length) {
+      this.setState({ answers, qi: qi + 1 }, () => {
+        const r = this.ranked()[0].t;
+        this.setState({ screen: 'result', resultId: r.id });
+        window.scrollTo(0, 0);
+      });
+    } else {
+      this.setState({ answers, qi: qi + 1, slider: 50 });
+    }
+  }
+
+  open(id) {
+    this.setState({ screen: 'result', resultId: id });
+    window.scrollTo(0, 0);
+  }
+
+  renderVals() {
+    const st = this.state;
+    const q = QUESTIONS[Math.min(st.qi, QUESTIONS.length - 1)];
+    const answered = Object.keys(st.answers).length;
+    const isSlider = q.t === 's';
+    const sv = st.slider / 100;
+    const matchCount = Math.max(2, Math.min(5, this.props.matchCount ?? 3));
+    const showBotanical = this.props.showBotanical ?? true;
+
+    const blades = [];
+    for (let i = 0; i < answered; i++) blades.push({ style: bladeStyle(i, QUESTIONS.length, 16 + ((i * 7) % 17), i % 2 ? 1 : -1) });
+    const landingBlades = [];
+    for (let i = 0; i < 15; i++) {
+      const h = 120 + Math.abs(Math.sin(i * 1.7)) * 210;
+      landingBlades.push({ style: `width:3px; height:${h.toFixed(0)}px; border-radius:3px 3px 0 0; background:linear-gradient(180deg, ${i % 3 === 0 ? '#d99a4e' : '#7d6a56'}, rgba(74,61,51,.15)); transform:rotate(${(i - 7) * 1.6}deg); transform-origin:50% 100%; animation:gs-rise .8s ${(i * .06).toFixed(2)}s cubic-bezier(.2,.7,.2,1) both;` });
+    }
+
+    const rt = TYPES.find(t => t.id === st.resultId) || TYPES[0];
+    const rk = this.ranked();
+    const others = TYPES.filter(t => t.id !== rt.id).map(t => ({ t, a: this.affinity(rt, t) })).sort((x, y) => y.a - x.a);
+    const worst = others[others.length - 1];
+
+    return {
+      isLanding: st.screen === 'landing',
+      isQuiz: st.screen === 'quiz',
+      isResult: st.screen === 'result',
+      isIndex: st.screen === 'index',
+      goHome: () => this.setState({ screen: 'landing' }),
+      goIndex: () => { this.setState({ screen: 'index' }); window.scrollTo(0, 0); },
+      startQuiz: () => { this.setState({ screen: 'quiz', qi: 0, answers: {}, slider: 50, resultId: null }); window.scrollTo(0, 0); },
+
+      landingBlades, blades,
+      stemHeight: `${6 + (answered / QUESTIONS.length) * 88}%`,
+      qNumLabel: `${answered}/${QUESTIONS.length}`,
+      progressLabel: `Question ${Math.min(st.qi + 1, QUESTIONS.length)} of ${QUESTIONS.length}`,
+      qKicker: q.k,
+      qKey: `q${st.qi}`,
+      qPrompt: q.p,
+      qSub: q.s,
+      isSliderQ: isSlider,
+      hasOptions: !isSlider,
+      optionCols: !isSlider && q.o.length > 2 ? 'repeat(auto-fit, minmax(230px, 1fr))' : 'repeat(auto-fit, minmax(240px, 1fr))',
+      qOptions: isSlider ? [] : q.o.map(o => ({ label: o[0], hint: o[1], pick: () => this.pick(o[2]) })),
+      sliderVal: st.slider,
+      sliderLeft: isSlider ? q.left : '',
+      sliderRight: isSlider ? q.right : '',
+      sliderReadout: isSlider ? q.readouts[Math.min(3, Math.floor(sv * 4))] : '',
+      onSlider: e => this.setState({ slider: Number(e.target.value) }),
+      commitSlider: () => this.pick({ [q.axis]: sv }),
+      canBack: st.qi > 0,
+      goBack: () => this.setState({ qi: st.qi - 1, slider: 50 }),
+
+      rName: rt.name,
+      rBotanical: showBotanical ? rt.botanical : '',
+      rEpithet: rt.epithet,
+      rBlurb: rt.blurb,
+      rHabitat: rt.habitat,
+      rSeason: rt.season,
+      rShadow: rt.shadow,
+      rAxes: AX.map((a, i) => ({ name: AXMETA[a].name, left: AXMETA[a].left, right: AXMETA[a].right, pos: `calc(${(rt.v[i] * 100).toFixed(0)}% - 6px)` })),
+      rMatches: others.slice(0, matchCount).map(o => ({ name: o.t.name, score: `${o.a}%`, why: this.why(rt, o.t), open: () => this.open(o.t.id) })),
+      rOpposite: worst.t.name,
+      rOppositeWhy: `${worst.a}% aligned. Opposed on almost every axis the almanac measures.`,
+      openOpposite: () => this.open(worst.t.id),
+
+      indexIntro: 'Each sign sits somewhere on four axes: water, tempo, company and fire. Affinity is simply distance \u2014 two grasses that want the same conditions get along, and two that do not will spend the season negotiating. Nothing here is a compliment or an insult, though several of them read like both.',
+      types: TYPES.map((t, i) => ({
+        name: t.name, botanical: showBotanical ? t.botanical : '', epithet: t.epithet, badge: t.badge, traits: t.traits, pair: t.pair,
+        ordinal: `No. ${String(i + 1).padStart(2, '0')}`,
+        border: st.resultId === t.id ? '#d99a4e' : '#3a2f27',
+        transform: st.flipped[t.id] ? 'rotateY(180deg)' : 'none',
+        flip: () => this.setState(s => ({ flipped: Object.assign({}, s.flipped, { [t.id]: !s.flipped[t.id] }) }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
