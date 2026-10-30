@@ -216,7 +216,7 @@
           <p class="lede">Answer ten questions about water, pace, company and fire. We’ll match you to one of twelve Australian grasses, then show who you grow best beside.</p>
           <div class="actions">
             <button class="btn btn-primary" data-action="start">Start the quiz</button>
-            <button class="btn btn-secondary" data-action="grasses">Meet the twelve</button>
+            <button class="btn btn-secondary" data-action="grasses">Meet the Twelve Grasses</button>
           </div>
         </div>
       </section>
